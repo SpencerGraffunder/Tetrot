@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dhlwdl7n0hw0w" path="res://assets/cw.png" id="3_nxtc6"]
 [ext_resource type="Script" uid="uid://bsv7ya305ubau" path="res://scenes/GameBoard.gd" id="3_q8u5g"]
 [ext_resource type="Texture2D" uid="uid://vvcpvnns2nsd" path="res://assets/left.png" id="4_jlsqs"]
+[ext_resource type="Script" uid="uid://dfbwkuyjde0a0" path="res://scripts/NextPiecePreview.gd" id="4_wp0k4"]
 [ext_resource type="Texture2D" uid="uid://dvijgfal7ie7c" path="res://assets/down.png" id="5_q8u5g"]
 [ext_resource type="Texture2D" uid="uid://bcujta2lpywnq" path="res://assets/right.png" id="6_lhr70"]
 
@@ -32,8 +33,11 @@ anchor_bottom = 0.1
 grow_horizontal = 2
 alignment = 1
 
-[node name="NextPiecePreviewP1" type="Control" parent="HBoxContainer" unique_id=1768174533]
+[node name="NextPiecePreviewP1" type="ColorRect" parent="HBoxContainer" unique_id=1765405285]
 layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1994320083]
 layout_mode = 2
@@ -50,8 +54,11 @@ theme_override_font_sizes/font_size = 40
 text = "Level 0"
 horizontal_alignment = 1
 
-[node name="NextPiecePreviewP2" type="Control" parent="HBoxContainer" unique_id=429613155]
+[node name="NextPiecePreviewP2" type="ColorRect" parent="HBoxContainer" unique_id=2047480090]
 layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
 
 [node name="GameBoard" type="ColorRect" parent="." unique_id=1233325681]
 layout_mode = 1
