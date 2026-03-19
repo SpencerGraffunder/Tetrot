@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://2nukcqpjapmg"]
+
+[ext_resource type="Script" uid="uid://bsga107aydmog" path="res://scripts/Lobby.gd" id="1_6jt0u"]
+[ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="1_cdhm0"]
+[ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="2_ras1x"]
+
+[sub_resource type="Theme" id="Theme_qbi84"]
+default_font = ExtResource("1_cdhm0")
+default_font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_ras1x"]
+font = ExtResource("1_cdhm0")
+font_size = 150
+
+[sub_resource type="LabelSettings" id="LabelSettings_oeg6l"]
+font = ExtResource("1_cdhm0")
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_cdhm0"]
+font = ExtResource("1_cdhm0")
+font_size = 40
+
+[node name="Lobby" type="Control" unique_id=2088505236]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_qbi84")
+script = ExtResource("1_6jt0u")
+
+[node name="ColorRect" parent="." unique_id=368792962 instance=ExtResource("2_ras1x")]
+layout_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=720685230]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -200.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer" unique_id=747725941]
+layout_mode = 2
+text = "Tetrot"
+label_settings = SubResource("LabelSettings_ras1x")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=654940093]
+layout_mode = 2
+text = "(With a silent T)"
+label_settings = SubResource("LabelSettings_oeg6l")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1068254904]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1923078791]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1023535267]
+layout_mode = 2
+text = "Starting Level"
+label_settings = SubResource("LabelSettings_cdhm0")
+
+[node name="StartingLevelSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer2" unique_id=1139075182]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 19.0
+alignment = 1
+
+[node name="IPLineEdit" type="LineEdit" parent="VBoxContainer" unique_id=1838650224]
+layout_mode = 2
+text = "localhost"
+placeholder_text = "Join IP Address"
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2104086776]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=415579194]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=360121734]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join"
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=1191449780]
+layout_mode = 2
+text = "Status"
+label_settings = SubResource("LabelSettings_cdhm0")

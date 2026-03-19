@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://gws7beqi4qae"]
+
+[ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="1_elqb8"]
+
+[node name="Node2D" type="Control" unique_id=771582486]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" parent="." unique_id=368792962 instance=ExtResource("1_elqb8")]
+layout_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1732691822]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.1
+grow_horizontal = 2
+alignment = 1
+
+[node name="NextPiecePreviewP1" type="Control" parent="HBoxContainer" unique_id=1768174533]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="HBoxContainer" unique_id=1623041196]
+layout_mode = 2
+text = "Score 9001"
+
+[node name="LevelLabel" type="Label" parent="HBoxContainer" unique_id=174366177]
+layout_mode = 2
+text = "Level 0"
+
+[node name="NextPiecePreviewP2" type="Control" parent="HBoxContainer" unique_id=429613155]
+layout_mode = 2
+
+[node name="GameBoard" type="Control" parent="." unique_id=892902045]
+layout_mode = 1
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.6
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1Area" type="VBoxContainer" parent="." unique_id=1306248482]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player1Area" unique_id=1720143424]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TopButtonRow" type="HBoxContainer" parent="Player1Area/VBoxContainer" unique_id=1228017433]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="RotateLeftButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=1249865240]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔄"
+
+[node name="PauseButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=51598609]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⏸️"
+
+[node name="RotateRightButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=2128016891]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔃"
+
+[node name="BottomButtonRow" type="HBoxContainer" parent="Player1Area/VBoxContainer" unique_id=45956275]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LeftButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=797310211]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "◀️"
+
+[node name="RightButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=275321690]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔽"
+
+[node name="DownButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=1522654136]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "▶️"
