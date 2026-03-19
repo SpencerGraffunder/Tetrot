@@ -11,6 +11,11 @@ signal player_disconnected(id)
 signal connection_failed
 signal connection_succeeded
 
+func get_player_number() -> int:
+	if multiplayer.is_server():
+		return 0
+	return players.keys().find(multiplayer.get_unique_id())
+
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)

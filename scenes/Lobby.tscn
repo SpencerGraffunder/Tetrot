@@ -2,11 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bsga107aydmog" path="res://scripts/Lobby.gd" id="1_6jt0u"]
 [ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="1_cdhm0"]
+[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://scenes/theme.tres" id="1_qbi84"]
 [ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="2_ras1x"]
-
-[sub_resource type="Theme" id="Theme_qbi84"]
-default_font = ExtResource("1_cdhm0")
-default_font_size = 50
 
 [sub_resource type="LabelSettings" id="LabelSettings_ras1x"]
 font = ExtResource("1_cdhm0")
@@ -27,7 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_qbi84")
+theme = ExtResource("1_qbi84")
 script = ExtResource("1_6jt0u")
 
 [node name="ColorRect" parent="." unique_id=368792962 instance=ExtResource("2_ras1x")]

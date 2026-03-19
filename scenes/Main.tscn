@@ -1,14 +1,25 @@
 [gd_scene format=3 uid="uid://gws7beqi4qae"]
 
 [ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="1_elqb8"]
+[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://scenes/theme.tres" id="1_nxtc6"]
+[ext_resource type="Texture2D" uid="uid://cel8ip5uorkb3" path="res://assets/pause.png" id="2_c01mt"]
+[ext_resource type="Script" uid="uid://oespki61nh3n" path="res://scenes/Main.gd" id="2_lhr70"]
+[ext_resource type="Texture2D" uid="uid://b2jii1a7gnqim" path="res://assets/ccw.png" id="3_jlsqs"]
+[ext_resource type="Texture2D" uid="uid://dhlwdl7n0hw0w" path="res://assets/cw.png" id="3_nxtc6"]
+[ext_resource type="Script" uid="uid://bsv7ya305ubau" path="res://scenes/GameBoard.gd" id="3_q8u5g"]
+[ext_resource type="Texture2D" uid="uid://vvcpvnns2nsd" path="res://assets/left.png" id="4_jlsqs"]
+[ext_resource type="Texture2D" uid="uid://dvijgfal7ie7c" path="res://assets/down.png" id="5_q8u5g"]
+[ext_resource type="Texture2D" uid="uid://bcujta2lpywnq" path="res://assets/right.png" id="6_lhr70"]
 
-[node name="Node2D" type="Control" unique_id=771582486]
+[node name="Main" type="Control" unique_id=771582486]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_nxtc6")
+script = ExtResource("2_lhr70")
 
 [node name="ColorRect" parent="." unique_id=368792962 instance=ExtResource("1_elqb8")]
 layout_mode = 1
@@ -24,31 +35,41 @@ alignment = 1
 [node name="NextPiecePreviewP1" type="Control" parent="HBoxContainer" unique_id=1768174533]
 layout_mode = 2
 
-[node name="ScoreLabel" type="Label" parent="HBoxContainer" unique_id=1623041196]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1994320083]
 layout_mode = 2
-text = "Score 9001"
 
-[node name="LevelLabel" type="Label" parent="HBoxContainer" unique_id=174366177]
+[node name="ScoreLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=1623041196]
 layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Score 9001"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=174366177]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
 text = "Level 0"
+horizontal_alignment = 1
 
 [node name="NextPiecePreviewP2" type="Control" parent="HBoxContainer" unique_id=429613155]
 layout_mode = 2
 
-[node name="GameBoard" type="Control" parent="." unique_id=892902045]
+[node name="GameBoard" type="ColorRect" parent="." unique_id=1233325681]
 layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.1
 anchor_right = 1.0
 anchor_bottom = 0.6
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("3_q8u5g")
 
 [node name="Player1Area" type="VBoxContainer" parent="." unique_id=1306248482]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.6
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -61,37 +82,49 @@ layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
-[node name="RotateLeftButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=1249865240]
+[node name="RotateLeftButton" type="TextureButton" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=645394298]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🔄"
+texture_normal = ExtResource("3_jlsqs")
+stretch_mode = 5
 
-[node name="PauseButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=51598609]
+[node name="PauseButton" type="TextureButton" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=2045490477]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "⏸️"
+texture_normal = ExtResource("2_c01mt")
+stretch_mode = 5
 
-[node name="RotateRightButton" type="Button" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=2128016891]
+[node name="RotateRightButton" type="TextureButton" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=929417273]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🔃"
+texture_normal = ExtResource("3_nxtc6")
+stretch_mode = 5
 
 [node name="BottomButtonRow" type="HBoxContainer" parent="Player1Area/VBoxContainer" unique_id=45956275]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
-[node name="LeftButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=797310211]
+[node name="LeftButton" type="TextureButton" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=1538292224]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "◀️"
+texture_normal = ExtResource("4_jlsqs")
+stretch_mode = 5
 
-[node name="RightButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=275321690]
+[node name="DownButton" type="TextureButton" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=1202842916]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "🔽"
+texture_normal = ExtResource("5_q8u5g")
+stretch_mode = 5
 
-[node name="DownButton" type="Button" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=1522654136]
+[node name="RightButton" type="TextureButton" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=628564792]
+texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
-text = "▶️"
+texture_normal = ExtResource("6_lhr70")
+stretch_mode = 5

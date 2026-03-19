@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://biuq255lfquw4"]
+
+[ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="1_nx7ni"]
+
+[resource]
+default_font = ExtResource("1_nx7ni")
+default_font_size = 50
