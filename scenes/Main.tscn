@@ -94,21 +94,21 @@ texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("3_jlsqs")
-stretch_mode = 5
+stretch_mode = 3
 
 [node name="PauseButton" type="TextureButton" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=2045490477]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("2_c01mt")
-stretch_mode = 5
+stretch_mode = 3
 
 [node name="RotateRightButton" type="TextureButton" parent="Player1Area/VBoxContainer/TopButtonRow" unique_id=929417273]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("3_nxtc6")
-stretch_mode = 5
+stretch_mode = 3
 
 [node name="BottomButtonRow" type="HBoxContainer" parent="Player1Area/VBoxContainer" unique_id=45956275]
 layout_mode = 2
@@ -120,18 +120,18 @@ texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("4_jlsqs")
-stretch_mode = 5
+stretch_mode = 3
 
 [node name="DownButton" type="TextureButton" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=1202842916]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("5_q8u5g")
-stretch_mode = 5
+stretch_mode = 3
 
 [node name="RightButton" type="TextureButton" parent="Player1Area/VBoxContainer/BottomButtonRow" unique_id=628564792]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 texture_normal = ExtResource("6_lhr70")
-stretch_mode = 5
+stretch_mode = 3

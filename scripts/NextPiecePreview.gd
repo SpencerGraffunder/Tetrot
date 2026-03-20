@@ -5,6 +5,7 @@ const PieceScript = preload("res://scripts/Piece.gd")
 
 var piece = null
 var tile_textures: Dictionary = {}
+var board_tile_size: float = 0.0
 
 func _ready():
     texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -36,7 +37,7 @@ func _draw():
         max_y = maxi(max_y, loc.y)
     var piece_w = max_x - min_x + 1
     var piece_h = max_y - min_y + 1
-    var tile_size = minf(size.x / piece_w, size.y / piece_h) * 0.8
+    var tile_size = board_tile_size if board_tile_size > 0 else minf(size.x / piece_w, size.y / piece_h) * 0.8
     var offset = Vector2(
         (size.x - tile_size * piece_w) / 2,
         (size.y - tile_size * piece_h) / 2
