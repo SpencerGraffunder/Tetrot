@@ -11,6 +11,9 @@ func _ready():
 	Network.connection_failed.connect(_on_connection_failed)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
+	var config = ConfigFile.new()
+    if config.load(SAVE_PATH) == OK:
+        ip_input.text = config.get_value("network", "last_ip", "")
 
 func _on_host_pressed():
 	Network.starting_level = int(level_input.value)
@@ -19,8 +22,11 @@ func _on_host_pressed():
 
 func _on_join_pressed():
 	var address = ip_input.text.strip_edges()
-	if address == "":
-		address = "127.0.0.1"
+    if address == "":
+        address = "127.0.0.1"
+    var config = ConfigFile.new()
+    config.set_value("network", "last_ip", address)
+    config.save(SAVE_PATH)
 	Network.starting_level = int(level_input.value)
 	Network.join_game(address)
 	status_label.text = "Connecting..."
