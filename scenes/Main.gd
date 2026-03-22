@@ -27,6 +27,12 @@ func _ready():
 	$Player1Area/VBoxContainer/TopButtonRow/RotateLeftButton.button_down.connect(func(): _on_button("CCW", true))
 	$Player1Area/VBoxContainer/TopButtonRow/RotateRightButton.button_down.connect(func(): _on_button("CW", true))
 
+@rpc("authority", "call_local", "reliable")
+func trigger_game_over(score: int, level: int):
+	Network.final_score = score
+	Network.final_level = level
+	get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
 func _physics_process(_delta):
 	if not multiplayer.is_server():
 		return
@@ -125,4 +131,4 @@ func _on_state_changed():
 	game_board.queue_redraw()
 
 func _on_game_over():
-	print("Game over! Score: ", logic.state.score)
+	trigger_game_over.rpc(logic.state.score, logic.state.current_level)
