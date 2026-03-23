@@ -1,7 +1,7 @@
 extends Control
 
 @onready var ip_input = $VBoxContainer/IPLineEdit
-@onready var status_label = $VBoxContainer/HBoxContainer2/StatusLabel
+@onready var status_label = $VBoxContainer/StatusLabel
 @onready var host_button = $VBoxContainer/HBoxContainer/HostButton
 @onready var join_button = $VBoxContainer/HBoxContainer/JoinButton
 @onready var level_input = $VBoxContainer/HBoxContainer2/StartingLevelSpinBox
@@ -20,7 +20,13 @@ func _ready():
 func _on_host_pressed():
 	Network.starting_level = int(level_input.value)
 	Network.host_game()
+	host_button.text = "Start"
+	host_button.pressed.disconnect(_on_host_pressed)
+	host_button.pressed.connect(_on_start_pressed)
 	status_label.text = "Waiting for player..."
+
+func _on_start_pressed():
+	Network.start_game.rpc()
 
 func _on_join_pressed():
 	var address = ip_input.text.strip_edges()
