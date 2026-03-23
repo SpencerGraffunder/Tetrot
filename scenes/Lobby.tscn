@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bsga107aydmog" path="res://scripts/Lobby.gd" id="1_6jt0u"]
 [ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="1_cdhm0"]
-[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://scenes/theme.tres" id="1_qbi84"]
+[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://assets/theme.tres" id="1_qbi84"]
 [ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="2_ras1x"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ras1x"]
@@ -17,7 +17,7 @@ font_size = 40
 font = ExtResource("1_cdhm0")
 font_size = 40
 
-[node name="Lobby2" type="Control" unique_id=2088505236]
+[node name="Lobby" type="Control" unique_id=2088505236]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

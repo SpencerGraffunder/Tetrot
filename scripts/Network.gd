@@ -1,7 +1,5 @@
 extends Node
 
-@onready var status_label = $VBoxContainer/HBoxContainer2/StatusLabel
-
 const PORT = 7777
 const MAX_PLAYERS = 8
 
@@ -42,7 +40,6 @@ func join_game(address: String):
 
 func _on_peer_connected(id):
 	if players.size() == MAX_PLAYERS:
-		status_label.text = "Max players already reached"
 		return;
 	if not multiplayer.is_server():
 		return  # clients don't need to track this

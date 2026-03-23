@@ -59,7 +59,7 @@ func reset(player_count: int, starting_level: int) -> void:
 				(state.board_width / float(player_count)) * (player.player_number + 1)) / 2.0
 			)
 	else:
-		state.players[0].spawn_column = state.board_width / 2
+		state.players[0].spawn_column = state.board_width / 2.0
 
 func do_input(player_number: int, control: String, pressed: bool) -> void:
 	if player_number >= state.players.size():

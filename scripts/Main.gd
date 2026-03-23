@@ -9,6 +9,7 @@ const PieceScript = preload("res://scripts/Piece.gd")
 @onready var preview_p2 = $HBoxContainer/NextPiecePreviewP2
 @onready var score_label = $HBoxContainer/VBoxContainer/ScoreLabel
 @onready var level_label = $HBoxContainer/VBoxContainer/LevelLabel
+@onready var pause_overlay = $PauseOverlay
 
 var logic: GameLogicScript
 
@@ -28,12 +29,26 @@ func _ready():
 	$Player1Area/VBoxContainer/BottomButtonRow/DownButton.button_up.connect(func(): _on_button("DOWN", false))
 	$Player1Area/VBoxContainer/TopButtonRow/RotateLeftButton.button_down.connect(func(): _on_button("CCW", true))
 	$Player1Area/VBoxContainer/TopButtonRow/RotateRightButton.button_down.connect(func(): _on_button("CW", true))
+	$Player1Area/VBoxContainer/TopButtonRow/PauseButton.button_down.connect(_on_pause_pressed)
+	$PauseOverlay/PausePanel/VBoxContainer/ResumeButton.pressed.connect(_on_pause_pressed)
+	$PauseOverlay/PausePanel/VBoxContainer/MainMenuButton.pressed.connect(_on_main_menu_pressed)
 
 @rpc("authority", "call_local", "reliable")
 func trigger_game_over(score: int, level: int):
 	Network.final_score = score
 	Network.final_level = level
 	get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
+@rpc("any_peer", "call_local", "reliable")
+func toggle_pause():
+	logic.paused = !logic.paused
+	pause_overlay.visible = logic.paused
+	$Player1Area/VBoxContainer/TopButtonRow/PauseButton.disabled = logic.paused
+	$Player1Area/VBoxContainer/TopButtonRow/RotateLeftButton.disabled = logic.paused
+	$Player1Area/VBoxContainer/TopButtonRow/RotateRightButton.disabled = logic.paused
+	$Player1Area/VBoxContainer/BottomButtonRow/LeftButton.disabled = logic.paused
+	$Player1Area/VBoxContainer/BottomButtonRow/DownButton.disabled = logic.paused
+	$Player1Area/VBoxContainer/BottomButtonRow/RightButton.disabled = logic.paused
 
 func _physics_process(_delta):
 	if not multiplayer.is_server():
@@ -145,3 +160,9 @@ func _on_state_changed():
 
 func _on_game_over():
 	trigger_game_over.rpc(logic.state.score, logic.state.current_level)
+
+func _on_pause_pressed():
+	toggle_pause.rpc()
+
+func _on_main_menu_pressed():
+	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")

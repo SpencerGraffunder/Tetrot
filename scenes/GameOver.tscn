@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cx0tfujs0lhbd"]
 
-[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://scenes/theme.tres" id="1_4noiy"]
-[ext_resource type="Script" uid="uid://td01gerc2mi6" path="res://scenes/GameOver.gd" id="2_4noiy"]
+[ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://assets/theme.tres" id="1_4noiy"]
+[ext_resource type="Script" uid="uid://td01gerc2mi6" path="res://scripts/GameOver.gd" id="2_4noiy"]
 [ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="3_88ekj"]
 [ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="4_0winm"]
 
@@ -13,7 +13,7 @@ font_size = 95
 font = ExtResource("4_0winm")
 font_size = 40
 
-[node name="Lobby" type="Control" unique_id=2088505236]
+[node name="GameOver" type="Control" unique_id=2088505236]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
