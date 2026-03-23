@@ -5,6 +5,7 @@ extends Control
 @onready var host_button = $VBoxContainer/HBoxContainer/HostButton
 @onready var join_button = $VBoxContainer/HBoxContainer/JoinButton
 @onready var level_input = $VBoxContainer/HBoxContainer2/StartingLevelSpinBox
+@onready var keyboard_spacer = $VBoxContainer/KeyboardSpacer
 
 const SAVE_PATH = "user://settings.cfg"
 
@@ -44,3 +45,8 @@ func _on_connection_succeeded():
 
 func _on_connection_failed():
 	status_label.text = "Connection failed."
+
+func _process(_delta):
+	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+		var keyboard_height = DisplayServer.virtual_keyboard_get_height()
+		keyboard_spacer.custom_minimum_size.y = keyboard_height
