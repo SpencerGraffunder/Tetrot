@@ -100,11 +100,53 @@ func tick(delta: float) -> void:
 		var room = rooms[code]
 		if room.started and room.logic != null:
 			room.logic.tick()
+			_sync_room_state(code)
 		else:
 			room.idle_timer += delta
 			if room.idle_timer >= ROOM_TIMEOUT:
 				print("Room timed out: ", code)
 				dissolve_room(code)
+
+func _sync_room_state(code: String) -> void:
+	var room = rooms[code]
+	var state_data = _serialize_state(room)
+	for peer_id in room.peers:
+		Network.rpc_sync_state.rpc_id(peer_id, state_data)
+
+func _serialize_state(room) -> PackedByteArray:
+	var board_data = []
+	for row in room.logic.state.board:
+		board_data.append(row.duplicate())
+	var players_data = []
+	for p in room.logic.state.players:
+		var piece_locs = []
+		var piece_type = -1
+		var piece_player = -1
+		if p.active_piece != null:
+			for loc in p.active_piece.locations:
+				piece_locs.append([loc.x, loc.y])
+			piece_type = p.active_piece.piece_type
+			piece_player = p.active_piece.player_number
+		var next_locs = []
+		var next_type = -1
+		if p.next_piece != null:
+			for loc in p.next_piece.locations:
+				next_locs.append([loc.x, loc.y])
+			next_type = p.next_piece.piece_type
+		players_data.append({
+			"player_number": p.player_number,
+			"piece_locs": piece_locs,
+			"piece_type": piece_type,
+			"piece_player": piece_player,
+			"next_locs": next_locs,
+			"next_type": next_type
+		})
+	return var_to_bytes({
+		"board": board_data,
+		"players": players_data,
+		"score": room.logic.state.score,
+		"level": room.logic.state.current_level
+	})
 
 func _on_game_over(code: String) -> void:
 	dissolve_room(code)

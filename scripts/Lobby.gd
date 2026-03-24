@@ -1,52 +1,105 @@
 extends Control
 
-@onready var ip_input = $VBoxContainer/IPLineEdit
-@onready var status_label = $VBoxContainer/StatusLabel
-@onready var host_button = $VBoxContainer/HBoxContainer/HostButton
-@onready var join_button = $VBoxContainer/HBoxContainer/JoinButton
-@onready var level_input = $VBoxContainer/HBoxContainer2/StartingLevelSpinBox
-@onready var keyboard_spacer = $VBoxContainer/KeyboardSpacer
+const Enums = preload("res://scripts/Enums.gd")
 
-const SAVE_PATH = "user://settings.cfg"
+@onready var room_code_input = $VBoxContainer/HBoxContainer/RoomCodeLineEdit
+@onready var create_button = $VBoxContainer/CreateButton
+@onready var join_button = $VBoxContainer/HBoxContainer/JoinButton
+@onready var status_label = $VBoxContainer/StatusLabel
+@onready var room_panel = $RoomPanel
+@onready var code_label = $RoomPanel/VBoxContainer/CodeLabel
+@onready var level_spinbox = $RoomPanel/VBoxContainer/HBoxContainer2/StartingLevelSpinBox
+@onready var start_button = $RoomPanel/VBoxContainer/HBoxContainer/StartButton
+@onready var leave_button = $RoomPanel/VBoxContainer/HBoxContainer/LeaveButton
+@onready var keyboard_spacer = $VBoxContainer/KeyboardSpacer
+@onready var room_status_label = $RoomPanel/VBoxContainer/StatusLabel
+
+var is_creator: bool = false
 
 func _ready():
-	Network.connection_succeeded.connect(_on_connection_succeeded)
-	Network.connection_failed.connect(_on_connection_failed)
-	host_button.pressed.connect(_on_host_pressed)
+	if Network.is_dedicated_server:
+		return
+		
+	room_panel.visible = false
+	create_button.pressed.connect(_on_create_pressed)
 	join_button.pressed.connect(_on_join_pressed)
-	var config = ConfigFile.new()
-	if config.load(SAVE_PATH) == OK:
-		ip_input.text = config.get_value("network", "last_ip", "")
+	start_button.pressed.connect(_on_start_pressed)
+	leave_button.pressed.connect(_on_leave_pressed)
+	level_spinbox.value_changed.connect(_on_level_changed)
 
-func _on_host_pressed():
-	Network.starting_level = int(level_input.value)
-	Network.host_game()
-	host_button.text = "Start"
-	host_button.pressed.disconnect(_on_host_pressed)
-	host_button.pressed.connect(_on_start_pressed)
-	status_label.text = "Waiting for player..."
+	Network.connection_succeeded.connect(_on_connected)
+	Network.connection_failed.connect(_on_connection_failed)
+	Network.room_created.connect(_on_room_created)
+	Network.room_joined.connect(_on_room_joined)
+	Network.room_updated.connect(_on_room_updated)
+	Network.game_starting.connect(_on_game_starting)
 
-func _on_start_pressed():
-	Network.start_game.rpc()
-
-func _on_join_pressed():
-	var address = ip_input.text.strip_edges()
-	if address == "":
-		address = "127.0.0.1"
-	var config = ConfigFile.new()
-	config.set_value("network", "last_ip", address)
-	config.save(SAVE_PATH)
-	Network.starting_level = int(level_input.value)
-	Network.join_game(address)
+	Network.connect_to_server()
 	status_label.text = "Connecting..."
-
-func _on_connection_succeeded():
-	status_label.text = "Connected!"
-
-func _on_connection_failed():
-	status_label.text = "Connection failed."
 
 func _process(_delta):
 	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
 		var keyboard_height = DisplayServer.virtual_keyboard_get_height()
 		keyboard_spacer.custom_minimum_size.y = keyboard_height
+
+func _on_connected():
+	status_label.text = "Connected"
+	create_button.disabled = false
+	join_button.disabled = false
+
+func _on_connection_failed():
+	status_label.text = "Connection failed."
+
+func _on_create_pressed():
+	is_creator = true
+	Network.rpc_create_room.rpc_id(1, int(level_spinbox.value))
+
+func _on_join_pressed():
+	var code = room_code_input.text.strip_edges().to_lower()
+	if code.length() != 3:
+		status_label.text = "Enter a 3 character room code."
+		return
+	is_creator = false
+	Network.rpc_join_room.rpc_id(1, code)
+
+func _on_start_pressed():
+	Network.rpc_start_game.rpc_id(1)
+
+func _on_level_changed(value: float):
+	if is_creator:
+		Network.rpc_update_level.rpc_id(1, int(value))
+
+func _show_room_panel():
+	room_panel.visible = true
+	create_button.visible = false
+	join_button.visible = false
+	room_code_input.visible = false
+	room_status_label.visible = false
+
+func _hide_room_panel():
+	room_panel.visible = false
+	create_button.visible = true
+	join_button.visible = true
+	room_code_input.visible = true
+	room_status_label.visible = true
+
+func _on_room_created(code: String):
+	code_label.text = code.to_upper()
+	level_spinbox.editable = true
+	start_button.visible = true
+	_show_room_panel()
+
+func _on_room_joined(_player_count: int):
+	level_spinbox.editable = false
+	start_button.visible = false
+	_show_room_panel()
+
+func _on_leave_pressed():
+	_hide_room_panel()
+
+func _on_room_updated(player_count: int, level: int):
+	room_status_label.text = "Players: " + str(player_count)
+	level_spinbox.value = level
+
+func _on_game_starting(_player_number: int, _player_count: int, _level: int):
+	get_tree().change_scene_to_file("res://scenes/Main.tscn")

@@ -59,37 +59,23 @@ horizontal_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1068254904]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1923078791]
-layout_mode = 2
-
-[node name="StartingLevelLabel" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1023535267]
-layout_mode = 2
-text = "Starting Level"
-label_settings = SubResource("LabelSettings_cdhm0")
-
-[node name="StartingLevelSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer2" unique_id=1139075182]
+[node name="CreateButton" type="Button" parent="VBoxContainer" unique_id=415579194]
 layout_mode = 2
 size_flags_horizontal = 3
-max_value = 19.0
-alignment = 1
-
-[node name="IPLineEdit" type="LineEdit" parent="VBoxContainer" unique_id=1838650224]
-layout_mode = 2
-text = "localhost"
-placeholder_text = "Join IP Address"
-alignment = 1
+disabled = true
+text = "Create"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2104086776]
 layout_mode = 2
 
-[node name="HostButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=415579194]
+[node name="RoomCodeLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1998236917]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Host"
+placeholder_text = "---"
 
 [node name="JoinButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=360121734]
 layout_mode = 2
 size_flags_horizontal = 3
+disabled = true
 text = "Join"
 
 [node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=1191449780]
@@ -99,3 +85,76 @@ label_settings = SubResource("LabelSettings_cdhm0")
 
 [node name="KeyboardSpacer" type="Control" parent="VBoxContainer" unique_id=1758501667]
 layout_mode = 2
+
+[node name="RoomPanel" type="Control" parent="." unique_id=2025749376]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" parent="RoomPanel" unique_id=1277585748 instance=ExtResource("2_ras1x")]
+layout_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="RoomPanel" unique_id=1454286576]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -200.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="CodeLabel" type="Label" parent="RoomPanel/VBoxContainer" unique_id=1373295120]
+layout_mode = 2
+text = "---"
+label_settings = SubResource("LabelSettings_ras1x")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="RoomPanel/VBoxContainer" unique_id=1470310571]
+layout_mode = 2
+text = "Share this code"
+label_settings = SubResource("LabelSettings_oeg6l")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="RoomPanel/VBoxContainer" unique_id=1539077806]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="RoomPanel/VBoxContainer" unique_id=337312907]
+layout_mode = 2
+
+[node name="StartingLevelLabel" type="Label" parent="RoomPanel/VBoxContainer/HBoxContainer2" unique_id=1030735380]
+layout_mode = 2
+text = "Starting Level"
+label_settings = SubResource("LabelSettings_cdhm0")
+
+[node name="StartingLevelSpinBox" type="SpinBox" parent="RoomPanel/VBoxContainer/HBoxContainer2" unique_id=839923690]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 19.0
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RoomPanel/VBoxContainer" unique_id=854998653]
+layout_mode = 2
+
+[node name="LeaveButton" type="Button" parent="RoomPanel/VBoxContainer/HBoxContainer" unique_id=872621402]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Leave"
+
+[node name="StartButton" type="Button" parent="RoomPanel/VBoxContainer/HBoxContainer" unique_id=411467246]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start"
+
+[node name="StatusLabel" type="Label" parent="RoomPanel/VBoxContainer" unique_id=827283136]
+layout_mode = 2
+text = "Status"
+label_settings = SubResource("LabelSettings_cdhm0")

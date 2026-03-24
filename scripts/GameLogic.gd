@@ -62,6 +62,9 @@ func reset(player_count: int, starting_level: int) -> void:
 		state.players[0].spawn_column = state.board_width / 2.0
 
 func do_input(player_number: int, control: String, pressed: bool) -> void:
+	if control == "PAUSE":
+		paused = pressed
+		return
 	if player_number >= state.players.size():
 		return
 	var player = state.players[player_number]
