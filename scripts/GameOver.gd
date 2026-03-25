@@ -4,9 +4,9 @@ extends Control
 @onready var level_value = $VBoxContainer/HBoxContainer2/Level
 
 func _ready():
-	score_value.text = str(Network.final_score)
-	level_value.text = str(Network.final_level)
-	$VBoxContainer/MainMenuButton.pressed.connect(_on_main_menu_pressed)
+    score_value.text = str(Network.final_score)
+    level_value.text = str(Network.final_level)
+    $VBoxContainer/MainMenuButton.pressed.connect(_on_main_menu_pressed)
 
 func _on_main_menu_pressed():
-	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
+    get_tree().change_scene_to_file("res://scenes/Lobby.tscn")

@@ -4,6 +4,14 @@
 [ext_resource type="FontFile" uid="uid://bdm02i5sgfo3h" path="res://assets/MunroSmall-wPZw.ttf" id="1_cdhm0"]
 [ext_resource type="Theme" uid="uid://biuq255lfquw4" path="res://assets/theme.tres" id="1_qbi84"]
 [ext_resource type="PackedScene" uid="uid://bedex7cxn0q5o" path="res://scenes/Background.tscn" id="2_ras1x"]
+[ext_resource type="Texture2D" uid="uid://ctd4trtu5l884" path="res://assets/tile_1.png" id="5_wuide"]
+[ext_resource type="Texture2D" uid="uid://bnolhommg3ix5" path="res://assets/tile_2.png" id="6_h77bf"]
+[ext_resource type="Texture2D" uid="uid://b7gfqrv4ahp4m" path="res://assets/tile_3.png" id="7_4hpk5"]
+[ext_resource type="Texture2D" uid="uid://4535byva7116" path="res://assets/tile_4.png" id="8_yyg1t"]
+[ext_resource type="Texture2D" uid="uid://bfdkejmveif6f" path="res://assets/tile_5.png" id="9_o6r7d"]
+[ext_resource type="Texture2D" uid="uid://ccdhs6g5eitrn" path="res://assets/tile_6.png" id="10_ug4sb"]
+[ext_resource type="Texture2D" uid="uid://4casnxyrx8xe" path="res://assets/tile_7.png" id="11_5av17"]
+[ext_resource type="Texture2D" uid="uid://7trcqxg8juxr" path="res://assets/tile_8.png" id="12_yy2xu"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ras1x"]
 font = ExtResource("1_cdhm0")
@@ -71,6 +79,8 @@ layout_mode = 2
 [node name="RoomCodeLineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1998236917]
 layout_mode = 2
 placeholder_text = "---"
+alignment = 1
+max_length = 3
 
 [node name="JoinButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=360121734]
 layout_mode = 2
@@ -87,7 +97,6 @@ label_settings = SubResource("LabelSettings_cdhm0")
 layout_mode = 2
 
 [node name="RoomPanel" type="Control" parent="." unique_id=2025749376]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -106,7 +115,9 @@ anchor_top = 0.4
 anchor_right = 0.5
 anchor_bottom = 0.6
 offset_left = -200.0
+offset_top = -120.0
 offset_right = 200.0
+offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -158,3 +169,70 @@ text = "Start"
 layout_mode = 2
 text = "Status"
 label_settings = SubResource("LabelSettings_cdhm0")
+
+[node name="PlayerList" type="HBoxContainer" parent="RoomPanel/VBoxContainer" unique_id=1199364039]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="P1" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=835756226]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("5_wuide")
+stretch_mode = 5
+
+[node name="P2" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=1886571736]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("6_h77bf")
+stretch_mode = 5
+
+[node name="P3" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=475008936]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("7_4hpk5")
+stretch_mode = 5
+
+[node name="P4" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=904906702]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("8_yyg1t")
+stretch_mode = 5
+
+[node name="P5" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=926437112]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("9_o6r7d")
+stretch_mode = 5
+
+[node name="P6" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=1233401304]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("10_ug4sb")
+stretch_mode = 5
+
+[node name="P7" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=1522080313]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("11_5av17")
+stretch_mode = 5
+
+[node name="P8" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=466573125]
+visible = false
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("12_yy2xu")
+stretch_mode = 5

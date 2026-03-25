@@ -108,6 +108,8 @@ func tick(delta: float) -> void:
 				dissolve_room(code)
 
 func _sync_room_state(code: String) -> void:
+	if not rooms.has(code):
+		return
 	var room = rooms[code]
 	var state_data = _serialize_state(room)
 	for peer_id in room.peers:
@@ -149,4 +151,9 @@ func _serialize_state(room) -> PackedByteArray:
 	})
 
 func _on_game_over(code: String) -> void:
+	if not rooms.has(code):
+		return
+	var room = rooms[code]
+	for peer_id in room.peers:
+		Network.rpc_game_over.rpc_id(peer_id, room.logic.state.score, room.logic.state.current_level)
 	dissolve_room(code)

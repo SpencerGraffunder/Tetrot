@@ -9,15 +9,16 @@ var starting_level: int = 0
 var final_score: int = 0
 var final_level: int = 0
 var is_dedicated_server: bool = false
+var starting_player_number: int = 0
+var starting_player_count: int = 2
 
 signal player_connected(id)
 signal player_disconnected(id)
 signal connection_failed
 signal connection_succeeded
 signal room_created(code)
-signal room_joined(player_count)
+signal room_joined(player_count, code)
 signal room_updated(player_count, starting_level)
-signal game_starting(player_number, player_count, starting_level)
 
 func _ready():
 	if OS.has_feature("local"):
@@ -32,13 +33,13 @@ func _ready():
 
 func start_dedicated_server():
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(PORT, MAX_PEERS)
+	peer.create_server(PORT, MAX_PEERS, 9)
 	multiplayer.multiplayer_peer = peer
 	print("Dedicated server started on port ", PORT)
 
 func connect_to_server():
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_client(SERVER_ADDRESS, PORT)
+	peer.create_client(SERVER_ADDRESS, PORT, 9)
 	multiplayer.multiplayer_peer = peer
 
 func host_game():
@@ -103,7 +104,7 @@ func rpc_join_room(code: String):
 	var success = RoomManager.join_room(sender, code)
 	if success:
 		var room = RoomManager.get_room_for_peer(sender)
-		rpc_room_joined.rpc_id(sender, room.peers.size())
+		rpc_room_joined.rpc_id(sender, room.peers.size(), room.code)
 		# notify all peers in room of updated count
 		for peer_id in room.peers:
 			rpc_room_updated.rpc_id(peer_id, room.peers.size(), room.starting_level)
@@ -143,7 +144,36 @@ func rpc_player_input(player_number: int, control: String, pressed: bool):
 	var room = RoomManager.get_room_for_peer(sender)
 	if room == null or not room.started:
 		return
+	if control == "PAUSE":
+		room.logic.paused = !room.logic.paused
+		for peer_id in room.peers:
+			rpc_set_paused.rpc_id(peer_id, room.logic.paused)
+		return
 	room.logic.do_input(player_number, control, pressed)
+
+@rpc("authority", "call_remote", "reliable")
+func rpc_set_paused(paused: bool):
+	var main = get_tree().current_scene
+	if main == null or not main.has_method("set_paused"):
+		return
+	main.set_paused(paused)
+
+@rpc("any_peer", "call_remote", "reliable")
+func rpc_leave_game():
+	if not is_dedicated_server:
+		return
+	var sender = multiplayer.get_remote_sender_id()
+	rpc_go_to_lobby.rpc_id(sender)
+	var room = RoomManager.get_room_for_peer(sender)
+	if room != null:
+		for peer_id in room.peers:
+			if peer_id != sender:
+				rpc_go_to_lobby.rpc_id(peer_id)
+		RoomManager.dissolve_room(room.code)
+
+@rpc("authority", "call_remote", "reliable")
+func rpc_go_to_lobby():
+	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
 
 # ---- SERVER -> CLIENT RPCs ----
 
@@ -152,8 +182,8 @@ func rpc_room_created(code: String):
 	room_created.emit(code)
 
 @rpc("authority", "call_remote", "reliable")
-func rpc_room_joined(player_count: int):
-	room_joined.emit(player_count)
+func rpc_room_joined(player_count: int, code: String):
+	room_joined.emit(player_count, code)
 
 @rpc("authority", "call_remote", "reliable")
 func rpc_room_updated(player_count: int, level: int):
@@ -167,8 +197,22 @@ func rpc_join_failed():
 func rpc_game_starting(player_number: int, player_count: int, level: int):
 	players[multiplayer.get_unique_id()] = { "player_number": player_number }
 	starting_level = level
-	game_starting.emit(player_number, player_count, level)
+	starting_player_number = player_number
+	starting_player_count = player_count
+	get_tree().change_scene_to_file("res://scenes/Main.tscn")
 
 @rpc("authority", "call_remote", "unreliable_ordered")
-func rpc_sync_state(_data: PackedByteArray):
-	pass
+func rpc_sync_state(data: PackedByteArray):
+	var main = get_tree().current_scene
+	if main == null or not main.has_method("rpc_sync_state"):
+		return
+	main.rpc_sync_state(data)
+
+@rpc("authority", "call_remote", "reliable")
+func rpc_game_over(score: int, level: int):
+	final_score = score
+	final_level = level
+	var main = get_tree().current_scene
+	if main.has_method("trigger_game_over"):
+		main.trigger_game_over(score, level)
+		

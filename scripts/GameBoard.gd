@@ -72,14 +72,17 @@ func _draw():
 					draw_texture_rect(tex, Rect2(pos, Vector2(tile_size, tile_size)), false)
 
 func apply_state(state_dict: Dictionary) -> void:
-	game_state.board = state_dict.board
+	game_state = state_dict
+
 	for i in range(game_state.players.size()):
-		var pd = state_dict.players[i]
+		var pd = game_state.players[i]
+
 		if pd.piece_locs.size() > 0:
-			if game_state.players[i].active_piece == null:
-				game_state.players[i].active_piece = PieceScript.new(pd.piece_type, pd.piece_player, 0, game_state.player_count)
+			var piece = PieceScript.new(pd.piece_type, pd.piece_player, 0, game_state.players.size())
 			for j in range(pd.piece_locs.size()):
-				game_state.players[i].active_piece.locations[j] = Vector2i(pd.piece_locs[j][0], pd.piece_locs[j][1])
+				piece.locations[j] = Vector2i(pd.piece_locs[j][0], pd.piece_locs[j][1])
+			pd.active_piece = piece
 		else:
-			game_state.players[i].active_piece = null
+			pd.active_piece = null
+
 	queue_redraw()
