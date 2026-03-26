@@ -9,4 +9,5 @@ func _ready():
     $VBoxContainer/MainMenuButton.pressed.connect(_on_main_menu_pressed)
 
 func _on_main_menu_pressed():
-    get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
+	print("[CLIENT GameOver] _on_main_menu_pressed: Changing to Lobby scene")
+	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")

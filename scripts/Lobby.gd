@@ -111,12 +111,15 @@ func _on_room_joined(player_count: int, code: String):
 	room_status_label.text = "Players: " + str(player_count)
 
 func _on_leave_pressed():
+	print("[CLIENT Lobby] _on_leave_pressed: Leaving room")
 	_hide_room_panel()
 
 func _on_room_updated(player_count: int, level: int):
+	print("[CLIENT Lobby] _on_room_updated: new player_count=", player_count, " level=", level)
 	_update_player_tiles(player_count)
 	room_status_label.text = "Players: " + str(player_count)
 	level_spinbox.value = level
 
 func _on_game_starting(_player_number: int, _player_count: int, _level: int):
+	print("[CLIENT Lobby] _on_game_starting: player_number=", _player_number, " player_count=", _player_count, " level=", _level)
 	get_tree().change_scene_to_file("res://scenes/Main.tscn")

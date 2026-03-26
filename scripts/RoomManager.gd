@@ -36,43 +36,55 @@ func create_room(creator_id: int, starting_level: int) -> String:
 	room.starting_level = starting_level
 	rooms[code] = room
 	peer_to_room[creator_id] = code
-	print("Room created: ", code, " by peer ", creator_id)
+	print("[SERVER RoomManager] create_room: Room created: ", code, " by peer ", creator_id, " at level ", starting_level)
 	return code
 
 func join_room(peer_id: int, code: String) -> bool:
 	code = code.to_lower()
 	if not rooms.has(code):
+		print("[SERVER RoomManager] join_room: Room ", code, " not found")
 		return false
 	var room = rooms[code]
 	if room.started:
+		print("[SERVER RoomManager] join_room: Room ", code, " already started")
 		return false
 	if room.peers.size() >= 8:
+		print("[SERVER RoomManager] join_room: Room ", code, " is full")
 		return false
 	room.peers.append(peer_id)
 	peer_to_room[peer_id] = code
-	print("Peer ", peer_id, " joined room ", code)
+	print("[SERVER RoomManager] join_room: Peer ", peer_id, " joined room ", code, " (now ", room.peers.size(), " peers)")
 	return true
 
 func leave_room(peer_id: int) -> void:
+	print("[SERVER RoomManager] leave_room: Peer ", peer_id, " leaving")
 	if not peer_to_room.has(peer_id):
+		print("[SERVER RoomManager] leave_room: Peer not in any room")
 		return
 	var code = peer_to_room[peer_id]
 	peer_to_room.erase(peer_id)
 	if not rooms.has(code):
+		print("[SERVER RoomManager] leave_room: Room ", code, " not found")
 		return
 	var room = rooms[code]
 	room.peers.erase(peer_id)
-	if room.peers.is_empty() or peer_id == room.creator:
+	print("[SERVER RoomManager] leave_room: Room ", code, " now has ", room.peers.size(), " peers")
+	if room.peers.is_empty():
+		print("[SERVER RoomManager] leave_room: Room is now empty, dissolving")
 		dissolve_room(code)
+	else:
+		print("[SERVER RoomManager] leave_room: Room still has players, keeping it alive")
 
 func dissolve_room(code: String) -> void:
 	if not rooms.has(code):
+		print("[SERVER RoomManager] dissolve_room: Room ", code, " not found")
 		return
 	var room = rooms[code]
+	print("[SERVER RoomManager] dissolve_room: Dissolving room ", code, " with peers: ", room.peers)
 	for peer_id in room.peers:
 		peer_to_room.erase(peer_id)
 	rooms.erase(code)
-	print("Room dissolved: ", code)
+	print("[SERVER RoomManager] dissolve_room: Room ", code, " dissolved")
 
 func start_room(code: String) -> bool:
 	if not rooms.has(code):
@@ -152,8 +164,11 @@ func _serialize_state(room) -> PackedByteArray:
 
 func _on_game_over(code: String) -> void:
 	if not rooms.has(code):
+		print("[SERVER RoomManager] _on_game_over: Room ", code, " not found")
 		return
 	var room = rooms[code]
+	print("[SERVER RoomManager] _on_game_over: Sending game over to ", room.peers.size(), " peers in room ", code)
 	for peer_id in room.peers:
+		print("[SERVER RoomManager] _on_game_over: Sending rpc_game_over to peer ", peer_id)
 		Network.rpc_game_over.rpc_id(peer_id, room.logic.state.score, room.logic.state.current_level)
 	dissolve_room(code)
