@@ -177,17 +177,10 @@ func rpc_leave_game():
 	print("[SERVER] rpc_leave_game: Peer ", sender, " is leaving game")
 	var room = RoomManager.get_room_for_peer(sender)
 	print("[SERVER] rpc_leave_game: Room found: ", room != null, " Room code: ", room.code if room != null else "NONE")
-	print("[SERVER] rpc_leave_game: Sending rpc_go_to_lobby only to sender peer ", sender)
-	rpc_go_to_lobby.rpc_id(sender)
 	if room != null:
 		print("[SERVER] rpc_leave_game: Room had ", room.peers.size(), " peers")
 		RoomManager.leave_room(sender)
 		print("[SERVER] rpc_leave_game: After leaving, room has ", room.peers.size(), " peers")
-
-@rpc("authority", "call_remote", "reliable")
-func rpc_go_to_lobby():
-	print("[CLIENT] rpc_go_to_lobby received, changing scene to Lobby")
-	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
 
 # ---- SERVER -> CLIENT RPCs ----
 

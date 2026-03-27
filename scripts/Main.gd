@@ -97,12 +97,12 @@ func set_paused(p: bool) -> void:
 	$Player1Area/VBoxContainer/BottomButtonRow/RightButton.disabled = p
 
 func _on_player_disconnected(_id):
-	print("[CLIENT Main] _on_player_disconnected: ", _id, " - changing to Lobby")
-	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
+	pass
 
 func _on_main_menu_pressed():
-	print("[CLIENT Main] _on_main_menu_pressed: Calling rpc_leave_game on server")
+	print("[CLIENT Main] _on_main_menu_pressed: Calling rpc_leave_game on server and returning to Lobby scene")
 	Network.rpc_leave_game.rpc_id(1)
+	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
 
 @rpc("authority", "call_local", "reliable")
 func trigger_game_over(score: int, level: int):
