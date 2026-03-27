@@ -2,7 +2,7 @@ extends Node
 
 const PORT = 7777
 const MAX_PEERS = 64
-var SERVER_ADDRESS: String = "tetrotserver.nuclearquads.com"
+var SERVER_ADDRESS: String = "50.124.156.19" #"tetrotserver.nuclearquads.com"
 
 var players: Dictionary = {}
 var starting_level: int = 0
@@ -41,12 +41,6 @@ func connect_to_server():
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_client(SERVER_ADDRESS, PORT, 9)
 	multiplayer.multiplayer_peer = peer
-
-func host_game():
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(PORT, 8)
-	multiplayer.multiplayer_peer = peer
-	print("Hosting on port ", PORT)
 
 func join_game(address: String):
 	var peer = ENetMultiplayerPeer.new()
