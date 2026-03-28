@@ -1,7 +1,7 @@
 extends RefCounted
 
 enum PieceType { I, O, T, L, J, S, Z }
-enum TileType { IOT = 0, JS = 1, LZ = 2, GRAY = 3, BLANK = 4 }
+enum TileType { IOT = 0, JS = 1, LZ = 2, GRAY = 3, BLANK = -1 }
 enum Direction { DOWN, LEFT, RIGHT }
 enum Rotation { CW, CCW }
 enum Turn { CW, CCW }

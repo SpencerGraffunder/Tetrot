@@ -30,36 +30,94 @@ script = ExtResource("2_lhr70")
 [node name="ColorRect" parent="." unique_id=368792962 instance=ExtResource("1_elqb8")]
 layout_mode = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1732691822]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1577146297]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.1
 grow_horizontal = 2
+
+[node name="StatsContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1067457885]
+layout_mode = 2
 alignment = 1
 
-[node name="NextPiecePreviewP1" type="ColorRect" parent="HBoxContainer" unique_id=1765405285]
+[node name="LevelLabel" type="Label" parent="VBoxContainer/StatsContainer" unique_id=174366177]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 35
+text = "Level 0"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="VBoxContainer/StatsContainer" unique_id=1623041196]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 35
+text = "Score 9001"
+horizontal_alignment = 1
+
+[node name="LinesLabel" type="Label" parent="VBoxContainer/StatsContainer" unique_id=182090723]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 35
+text = "Lines 0"
+horizontal_alignment = 1
+
+[node name="NextPieceContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1732691822]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="NextPiecePreviewP1" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=1765405285]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.17254902, 0.17254902, 0.17254902, 1)
 script = ExtResource("4_wp0k4")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1994320083]
+[node name="NextPiecePreviewP2" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=2047480090]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
 
-[node name="ScoreLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=1623041196]
+[node name="NextPiecePreviewP3" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=2030750378]
+visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Score 9001"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
 
-[node name="LevelLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=174366177]
+[node name="NextPiecePreviewP4" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=1317466718]
+visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Level 0"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
 
-[node name="NextPiecePreviewP2" type="ColorRect" parent="HBoxContainer" unique_id=2047480090]
+[node name="NextPiecePreviewP5" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=1796098674]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
+
+[node name="NextPiecePreviewP6" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=472079741]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
+
+[node name="NextPiecePreviewP7" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=1884169484]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.17254902, 0.17254902, 0.17254902, 1)
+script = ExtResource("4_wp0k4")
+
+[node name="NextPiecePreviewP8" type="ColorRect" parent="VBoxContainer/NextPieceContainer" unique_id=1076876707]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.17254902, 0.17254902, 0.17254902, 1)

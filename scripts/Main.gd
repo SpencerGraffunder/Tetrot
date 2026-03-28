@@ -5,23 +5,38 @@ const Enums = preload("res://scripts/Enums.gd")
 const PieceScript = preload("res://scripts/Piece.gd")
 
 @onready var game_board = $GameBoard
-@onready var preview_p1 = $HBoxContainer/NextPiecePreviewP1
-@onready var preview_p2 = $HBoxContainer/NextPiecePreviewP2
-@onready var score_label = $HBoxContainer/VBoxContainer/ScoreLabel
-@onready var level_label = $HBoxContainer/VBoxContainer/LevelLabel
+@onready var preview_p1 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP1
+@onready var preview_p2 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP2
+@onready var preview_p3 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP3
+@onready var preview_p4 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP4
+@onready var preview_p5 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP5
+@onready var preview_p6 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP6
+@onready var preview_p7 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP7
+@onready var preview_p8 = $VBoxContainer/NextPieceContainer/NextPiecePreviewP8
+@onready var score_label = $VBoxContainer/StatsContainer/ScoreLabel
+@onready var level_label = $VBoxContainer/StatsContainer/LevelLabel
+@onready var lines_label = $VBoxContainer/StatsContainer/LinesLabel
 @onready var pause_overlay = $PauseOverlay
 
 var local_player_number: int = 0
 var local_player_count: int = 2
+var previews: Array = []
 
 func _ready():
 	local_player_number = Network.starting_player_number
 	local_player_count = Network.starting_player_count
 	game_board.init_board(local_player_count)
-	preview_p1.board_tile_size = game_board.tile_size
-	preview_p2.board_tile_size = game_board.tile_size
-
-	get_tree().set_auto_accept_quit(false)
+	
+	# Populate the previews array
+	previews = [preview_p1, preview_p2, preview_p3, preview_p4, preview_p5, preview_p6, preview_p7, preview_p8]
+	
+	# Show only previews for active players and initialize them
+	for i in range(previews.size()):
+		if i < local_player_count:
+			previews[i].visible = true
+			previews[i].board_tile_size = game_board.tile_size
+		else:
+			previews[i].visible = false
 
 	print("Main ready, connecting signals")
 	Network.player_disconnected.connect(_on_player_disconnected)
@@ -73,16 +88,15 @@ func rpc_sync_state(data: PackedByteArray):
 	game_board.apply_state(state_dict)
 	score_label.text = "Score: " + str(state_dict.score)
 	level_label.text = "Level: " + str(state_dict.level)
+	lines_label.text = "Lines: " + str(state_dict.lines_cleared)
 	for i in range(state_dict.players.size()):
 		var pd = state_dict.players[i]
 		if pd.next_locs.size() > 0:
 			var dummy_piece = PieceScript.new(pd.next_type, pd.player_number, 0, local_player_count)
 			for j in range(pd.next_locs.size()):
 				dummy_piece.locations[j] = Vector2i(pd.next_locs[j][0], pd.next_locs[j][1])
-			if i == 0:
-				preview_p1.set_piece(dummy_piece, 0)
-			elif i == 1:
-				preview_p2.set_piece(dummy_piece, 1)
+			if i < previews.size():
+				previews[i].set_piece(dummy_piece, i, local_player_count)
 
 func _on_pause_pressed():
 	Network.rpc_player_input.rpc_id(1, local_player_number, "PAUSE", true)

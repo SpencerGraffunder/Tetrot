@@ -42,9 +42,28 @@ func _ready():
 func load_textures():
 	tile_textures[0] = load("res://assets/backgroundblock.bmp")
 	for i in range(10):
-		var image = load("res://assets/tile_%d.png" % i).get_image()
-		var tex = ImageTexture.create_from_image(image)
-		tile_textures[i + 1] = tex
+		var image = load("res://assets/tile_%d.png" % i)
+		if image != null:
+			var tex = ImageTexture.create_from_image(image.get_image())
+			tile_textures[i + 1] = tex
+
+func get_tile_texture(player_or_tile_value: int, player_count: int):
+	"""Get the appropriate texture for a tile or piece based on game mode.
+	
+	Args:
+		player_or_tile_value: Player number (multiplayer) or tile_type (singleplayer)
+		player_count: Number of players in the game
+	
+	Returns:
+		The texture for the given value, or background texture if not found
+	"""
+	if player_count > 1:
+		# Multiplayer: use player number offset by 2
+		var texture_index = player_or_tile_value + 2
+		return tile_textures.get(texture_index, tile_textures[0])
+	else:
+		# Singleplayer: use tile_type directly
+		return tile_textures.get(player_or_tile_value + 2, tile_textures[0])
 
 func _draw():
 	if game_state == null:
@@ -52,7 +71,9 @@ func _draw():
 	for r in range(game_state.board.size()):
 		for c in range(game_state.board[r].size()):
 			var tile = game_state.board[r][c]
-			var tex = tile_textures.get(tile + 2) if tile != Enums.TileType.BLANK else tile_textures.get(0)
+			var tex = tile_textures[0]
+			if tile != Enums.TileType.BLANK:
+				tex = get_tile_texture(tile, game_state.players.size())
 			var screen_row = r - 2
 			if screen_row < 0:
 				continue
@@ -66,7 +87,8 @@ func _draw():
 				var screen_row = loc.y - 2
 				if screen_row < 0:
 					continue
-				var tex = tile_textures.get(p.player_number + 2)
+				var color_value = p.player_number if game_state.players.size() > 1 else p.active_piece.tile_type
+				var tex = get_tile_texture(color_value, game_state.players.size())
 				var pos = Vector2(offset.x + loc.x * tile_size, offset.y + screen_row * tile_size)
 				if tex:
 					draw_texture_rect(tex, Rect2(pos, Vector2(tile_size, tile_size)), false)

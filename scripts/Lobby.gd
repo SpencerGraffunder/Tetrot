@@ -51,7 +51,7 @@ func _ready():
 
 func _process(_delta):
 	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
-		var keyboard_height = DisplayServer.virtual_keyboard_get_height()
+		var keyboard_height = DisplayServer.virtual_keyboard_get_height()/2
 		keyboard_spacer.custom_minimum_size.y = keyboard_height
 
 func _update_player_tiles(count: int) -> void:

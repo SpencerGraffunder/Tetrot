@@ -23,7 +23,7 @@ font_size = 40
 
 [sub_resource type="LabelSettings" id="LabelSettings_cdhm0"]
 font = ExtResource("1_cdhm0")
-font_size = 40
+font_size = 30
 
 [node name="Lobby" type="Control" unique_id=2088505236]
 layout_mode = 3
@@ -88,15 +88,27 @@ size_flags_horizontal = 3
 disabled = true
 text = "Join"
 
-[node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=1191449780]
-layout_mode = 2
-text = "Status"
-label_settings = SubResource("LabelSettings_cdhm0")
-
 [node name="KeyboardSpacer" type="Control" parent="VBoxContainer" unique_id=1758501667]
 layout_mode = 2
 
+[node name="StatusLabel" type="Label" parent="." unique_id=1191449780]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -46.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "Status"
+label_settings = SubResource("LabelSettings_cdhm0")
+
 [node name="RoomPanel" type="Control" parent="." unique_id=2025749376]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -183,6 +195,7 @@ texture_normal = ExtResource("5_wuide")
 stretch_mode = 5
 
 [node name="P2" type="TextureButton" parent="RoomPanel/VBoxContainer/PlayerList" unique_id=1886571736]
+visible = false
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3

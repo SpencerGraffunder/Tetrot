@@ -6,6 +6,7 @@ const PieceScript = preload("res://scripts/Piece.gd")
 var piece = null
 var tile_textures: Dictionary = {}
 var board_tile_size: float = 0.0
+var player_count: int = 1
 
 func _ready():
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -18,8 +19,9 @@ func load_textures():
 		var tex = ImageTexture.create_from_image(image)
 		tile_textures[i + 1] = tex
 
-func set_piece(p, _player_number: int) -> void:
+func set_piece(p, _player_number: int, p_player_count: int = 1) -> void:
 	piece = p
+	player_count = p_player_count
 	queue_redraw()
 
 func _draw():
@@ -43,7 +45,8 @@ func _draw():
 		(size.y - tile_size * piece_h) / 2
 	)
 	for loc in piece.locations:
-		var tex = tile_textures.get(piece.player_number + 2)
+		var color_index = (piece.player_number % 9) + 2 if player_count > 1 else piece.tile_type + 2
+		var tex = tile_textures.get(color_index)
 		var pos = Vector2(
 			offset.x + (loc.x - min_x) * tile_size,
 			offset.y + (loc.y - min_y) * tile_size
