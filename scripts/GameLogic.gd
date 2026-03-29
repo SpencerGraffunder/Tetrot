@@ -63,7 +63,8 @@ func reset(player_count: int, starting_level: int) -> void:
 
 func do_input(player_number: int, control: String, pressed: bool) -> void:
 	if control == "PAUSE":
-		paused = pressed
+		if pressed:
+			paused = !paused
 		return
 	if player_number >= state.players.size():
 		return

@@ -22,6 +22,11 @@ var local_player_number: int = 0
 var local_player_count: int = 2
 var previews: Array = []
 
+# Track previous action states to detect press/release
+var prev_move_left: bool = false
+var prev_move_right: bool = false
+var prev_move_down: bool = false
+
 func _ready():
 	local_player_number = Network.starting_player_number
 	local_player_count = Network.starting_player_count
@@ -54,30 +59,50 @@ func _ready():
 	$PauseOverlay/PausePanel/VBoxContainer/MainMenuButton.pressed.connect(_on_main_menu_pressed)
 
 func _physics_process(_delta):
-	pass
-
-func _input(event):
-	if event is InputEventKey and event.echo:
-		return
-	if not (event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion):
-		return
-	var control = get_control_from_input(event)
-	if control == "":
-		return
-	var pressed = event.is_pressed()
-	if control == "PAUSE" and pressed:
+	# Check pause action
+	if Input.is_action_just_pressed("pause"):
 		_on_pause_pressed()
 		return
-	_on_button(control, pressed)
+	
+	# Check movement and rotation actions
+	if Input.is_action_just_pressed("rotate_cw"):
+		_on_button("CW", true)
+	if Input.is_action_just_pressed("rotate_ccw"):
+		_on_button("CCW", true)
+	
+	# Detect press/release transitions for continuous actions
+	var curr_move_left = Input.is_action_pressed("move_left")
+	var curr_move_right = Input.is_action_pressed("move_right")
+	var curr_move_down = Input.is_action_pressed("move_down")
+	
+	# LEFT
+	if curr_move_left and not prev_move_left:
+		_on_button("LEFT", true)
+	elif not curr_move_left and prev_move_left:
+		_on_button("LEFT", false)
+	
+	# RIGHT
+	if curr_move_right and not prev_move_right:
+		_on_button("RIGHT", true)
+	elif not curr_move_right and prev_move_right:
+		_on_button("RIGHT", false)
+	
+	# DOWN
+	if curr_move_down and not prev_move_down:
+		_on_button("DOWN", true)
+	elif not curr_move_down and prev_move_down:
+		_on_button("DOWN", false)
+	
+	# Update previous states
+	prev_move_left = curr_move_left
+	prev_move_right = curr_move_right
+	prev_move_down = curr_move_down
 
-func get_control_from_input(event) -> String:
-	if event.is_action("move_left"): return "LEFT"
-	if event.is_action("move_right"): return "RIGHT"
-	if event.is_action("move_down"): return "DOWN"
-	if event.is_action("rotate_cw"): return "CW"
-	if event.is_action("rotate_ccw"): return "CCW"
-	if event.is_action("pause"): return "PAUSE"
-	return ""
+func _input(event):
+	# Only handle UI button presses from the on-screen buttons
+	# Controller and keyboard input is now handled in _physics_process()
+	if not event is InputEventMouseButton:
+		get_tree().root.set_input_as_handled()
 
 func _on_button(control: String, pressed: bool) -> void:
 	Network.rpc_player_input.rpc_id(1, local_player_number, control, pressed)

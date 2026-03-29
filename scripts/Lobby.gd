@@ -5,7 +5,7 @@ const Enums = preload("res://scripts/Enums.gd")
 @onready var room_code_input = $VBoxContainer/HBoxContainer/RoomCodeLineEdit
 @onready var create_button = $VBoxContainer/CreateButton
 @onready var join_button = $VBoxContainer/HBoxContainer/JoinButton
-@onready var status_label = $VBoxContainer/StatusLabel
+@onready var status_label = $StatusLabel
 @onready var room_panel = $RoomPanel
 @onready var code_label = $RoomPanel/VBoxContainer/CodeLabel
 @onready var level_spinbox = $RoomPanel/VBoxContainer/HBoxContainer2/StartingLevelSpinBox
@@ -51,7 +51,7 @@ func _ready():
 
 func _process(_delta):
 	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
-		var keyboard_height = DisplayServer.virtual_keyboard_get_height()/2
+		var keyboard_height = DisplayServer.virtual_keyboard_get_height()/2.0
 		keyboard_spacer.custom_minimum_size.y = keyboard_height
 
 func _update_player_tiles(count: int) -> void:
