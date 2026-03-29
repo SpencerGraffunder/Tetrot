@@ -1,8 +1,8 @@
 extends Node
 
 const PORT = 7777
-const MAX_PEERS = 64
 var SERVER_ADDRESS: String = "50.124.156.19" #"tetrotserver.nuclearquads.com"
+var USE_WSS: bool = false
 
 var players: Dictionary = {}
 var starting_level: int = 0
@@ -22,7 +22,14 @@ signal room_updated(player_count, starting_level)
 
 func _ready():
 	if OS.has_feature("local"):
+		# Desktop local dev build
 		SERVER_ADDRESS = "127.0.0.1"
+		USE_WSS = false
+	# elif OS.has_feature("web"):
+	# 	# Web build - defaults to localhost for local dev
+	# 	# For production, update SERVER_ADDRESS before building
+	# 	SERVER_ADDRESS = "127.0.0.1"
+	
 	if DisplayServer.get_name() == "headless":
 		is_dedicated_server = true
 		start_dedicated_server()
@@ -32,20 +39,35 @@ func _ready():
 	multiplayer.connection_failed.connect(_on_connection_failed)
 
 func start_dedicated_server():
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(PORT, MAX_PEERS, 9)
+	var peer = WebSocketMultiplayerPeer.new()
+	var error = peer.create_server(PORT)
+	if error != OK:
+		printerr("Failed to start WebSocket server on port ", PORT, ": error code ", error)
+		return
 	multiplayer.multiplayer_peer = peer
-	print("Dedicated server started on port ", PORT)
+	print("WebSocket server started on port ", PORT)
 
 func connect_to_server():
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_client(SERVER_ADDRESS, PORT, 9)
+	var peer = WebSocketMultiplayerPeer.new()
+	var protocol = "wss" if USE_WSS else "ws"
+	var uri = "%s://%s:%d" % [protocol, SERVER_ADDRESS, PORT]
+	var error = peer.create_client(uri)
+	if error != OK:
+		printerr("Failed to connect to WebSocket server at ", uri, ": error code ", error)
+		return
 	multiplayer.multiplayer_peer = peer
+	print("Connecting to WebSocket server at ", uri)
 
 func join_game(address: String):
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_client(address, PORT)
+	var peer = WebSocketMultiplayerPeer.new()
+	var protocol = "wss" if USE_WSS else "ws"
+	var uri = "%s://%s:%d" % [protocol, address, PORT]
+	var error = peer.create_client(uri)
+	if error != OK:
+		printerr("Failed to connect to WebSocket server at ", uri, ": error code ", error)
+		return
 	multiplayer.multiplayer_peer = peer
+	print("Connecting to WebSocket server at ", uri)
 
 func get_player_number() -> int:
 	if multiplayer.is_server():
