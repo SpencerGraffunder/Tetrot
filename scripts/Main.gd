@@ -99,9 +99,8 @@ func _physics_process(_delta):
 	prev_move_down = curr_move_down
 
 func _input(event):
-	# Only handle UI button presses from the on-screen buttons
-	# Controller and keyboard input is now handled in _physics_process()
-	if not event is InputEventMouseButton:
+	# Only handle mouse events, do not block touch events for multitouch support
+	if event is InputEventMouseButton:
 		get_tree().root.set_input_as_handled()
 
 func _on_button(control: String, pressed: bool) -> void:
