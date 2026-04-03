@@ -98,10 +98,6 @@ func _physics_process(_delta):
 	prev_move_right = curr_move_right
 	prev_move_down = curr_move_down
 
-func _input(event):
-	# Only handle mouse events, do not block touch events for multitouch support
-	if event is InputEventMouseButton:
-		get_tree().root.set_input_as_handled()
 
 func _on_button(control: String, pressed: bool) -> void:
 	Network.rpc_player_input.rpc_id(1, local_player_number, control, pressed)

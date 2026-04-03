@@ -1,11 +1,8 @@
 extends Node
 
 const PORT = 7777
-var SERVER_ADDRESS: String = "tetrot-server.nuclearquads.com"
-# var SERVER_ADDRESS: String = "192.168.4.200:7777"
-# var SERVER_ADDRESS: String = "127.0.0.1"
-# var SERVER_ADDRESS: String = "50.124.156.19"
-var USE_WSS: bool = true
+var SERVER_ADDRESS: String
+var USE_WSS: bool
 
 var players: Dictionary = {}
 var starting_level: int = 0
@@ -14,6 +11,7 @@ var final_level: int = 0
 var is_dedicated_server: bool = false
 var starting_player_number: int = 0
 var starting_player_count: int = 2
+var room_device_ids: Dictionary = {}
 
 signal player_connected(id)
 signal player_disconnected(id)
@@ -23,7 +21,8 @@ signal room_created(code)
 signal room_joined(player_count, code)
 signal room_updated(player_count, starting_level)
 
-func _ready():	
+func _ready():
+	_set_server_address_and_protocol()
 	if DisplayServer.get_name() == "headless":
 		is_dedicated_server = true
 		start_dedicated_server()
@@ -32,26 +31,38 @@ func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 
+func _set_server_address_and_protocol():
+	if OS.has_feature("local"):
+		SERVER_ADDRESS = "127.0.0.1:%d" % PORT
+		USE_WSS = false
+		print("[DEBUG] Using LOCAL server address:", SERVER_ADDRESS, "USE_WSS:", USE_WSS)
+	else:
+		SERVER_ADDRESS = "tetrot-server.nuclearquads.com"
+		USE_WSS = true
+		print("[DEBUG] Using REMOTE server address:", SERVER_ADDRESS, "USE_WSS:", USE_WSS)
+
 func start_dedicated_server():
 	var peer = WebSocketMultiplayerPeer.new()
 	var error = peer.create_server(PORT)
 	if error != OK:
-		printerr("Failed to start WebSocket server on port ", PORT, ": error code ", error)
+		printerr("[SERVER] Failed to start WebSocket server on port ", PORT, ": error code ", error)
 		return
 	multiplayer.multiplayer_peer = peer
-	print("WebSocket server started on port ", PORT)
+	print("[SERVER] WebSocket server started on port ", PORT)
+	print("[SERVER] Ready to host at ws://0.0.0.0:", PORT)
 
 func connect_to_server():
 	var peer = WebSocketMultiplayerPeer.new()
 	var protocol = "wss" if USE_WSS else "ws"
 	# var uri = "%s://%s:%d" % [protocol, SERVER_ADDRESS, PORT]
 	var uri = "%s://%s" % [protocol, SERVER_ADDRESS]
+	print("[CLIENT] Attempting to connect to server at:", uri, "(protocol:", protocol, ")")
 	var error = peer.create_client(uri)
 	if error != OK:
-		printerr("Failed to connect to WebSocket server at ", uri, ": error code ", error)
+		printerr("[CLIENT] Failed to connect to WebSocket server at ", uri, ": error code ", error)
 		return
 	multiplayer.multiplayer_peer = peer
-	print("Connecting to WebSocket server at ", uri)
+	print("[CLIENT] Connecting to WebSocket server at ", uri)
 
 func get_player_number() -> int:
 	if multiplayer.is_server():
@@ -80,39 +91,61 @@ func _on_peer_disconnected(id):
 
 func _on_connected_to_server():
 	print("[CLIENT] Connected to server!")
+	print("[CLIENT] Multiplayer peer info:", multiplayer.multiplayer_peer)
 	connection_succeeded.emit()
 
 func _on_connection_failed():
 	print("[CLIENT] Connection failed.")
+	print("[CLIENT] Multiplayer peer info:", multiplayer.multiplayer_peer)
 	connection_failed.emit()
 
 # ---- CLIENT -> SERVER RPCs ----
 
 @rpc("any_peer", "call_remote", "reliable")
-func rpc_create_room(level: int):
+func rpc_create_room(level: int, device_id: String = ""): # device_id is optional for backward compatibility
 	if not is_dedicated_server:
 		return
 	var sender = multiplayer.get_remote_sender_id()
-	print("[SERVER] rpc_create_room: Peer ", sender, " creating room with level ", level)
+	print("[SERVER] rpc_create_room: Peer ", sender, " creating room with level ", level, " device_id=", device_id)
 	var code = RoomManager.create_room(sender, level)
+	# Store device_id for reconnect logic
+	if not room_device_ids.has(code):
+		room_device_ids[code] = {}
+	room_device_ids[code][device_id] = sender
 	print("[SERVER] rpc_create_room: Created room code: ", code)
 	rpc_room_created.rpc_id(sender, code)
 
 @rpc("any_peer", "call_remote", "reliable")
-func rpc_join_room(code: String):
+func rpc_join_room(code: String, device_id: String = ""): # device_id is optional for backward compatibility
 	if not is_dedicated_server:
 		return
 	var sender = multiplayer.get_remote_sender_id()
-	print("[SERVER] rpc_join_room: Peer ", sender, " trying to join room ", code)
-	var success = RoomManager.join_room(sender, code)
+	print("[SERVER] rpc_join_room: Peer ", sender, " trying to join room ", code, " device_id=", device_id)
+	# Reconnect logic: if device_id matches a previous player, reassign
+	if room_device_ids.has(code) and room_device_ids[code].has(device_id):
+		var old_sender = room_device_ids[code][device_id]
+		print("[SERVER] rpc_join_room: Reconnecting device_id=", device_id, " old_sender=", old_sender, " new_sender=", sender)
+		RoomManager.reassign_peer(code, old_sender, sender)
+		room_device_ids[code][device_id] = sender
+	else:
+		if not room_device_ids.has(code):
+			room_device_ids[code] = {}
+		room_device_ids[code][device_id] = sender
+		RoomManager.join_room(sender, code)
+	var success = RoomManager.peer_to_room.has(sender)
+	print("[SERVER] rpc_join_room: join_room returned ", success, " for sender=", sender, " code=", code)
+	print("[SERVER] peer_to_room after join: ", RoomManager.peer_to_room)
 	if success:
 		var room = RoomManager.get_room_for_peer(sender)
-		print("[SERVER] rpc_join_room: Success - joining peer and notifying room with ", room.peers.size(), " peers")
-		rpc_room_joined.rpc_id(sender, room.peers.size(), room.code)
-		# notify all peers in room of updated count
-		for peer_id in room.peers:
-			print("[SERVER] rpc_join_room: Notifying peer ", peer_id, " of room update")
-			rpc_room_updated.rpc_id(peer_id, room.peers.size(), room.starting_level)
+		if room == null:
+			print("[SERVER] ERROR: get_room_for_peer returned null for sender=", sender, " code=", code)
+		else:
+			print("[SERVER] rpc_join_room: Success - joining peer and notifying room with ", room.peers.size(), " peers")
+			rpc_room_joined.rpc_id(sender, room.peers.size(), room.code)
+			# notify all peers in room of updated count
+			for peer_id in room.peers:
+				print("[SERVER] rpc_join_room: Notifying peer ", peer_id, " of room update")
+				rpc_room_updated.rpc_id(peer_id, room.peers.size(), room.starting_level)
 	else:
 		print("[SERVER] rpc_join_room: Failed - sending join_failed to peer ", sender)
 		rpc_join_failed.rpc_id(sender)

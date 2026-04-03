@@ -54,10 +54,30 @@ func join_room(peer_id: int, code: String) -> bool:
 	if room.peers.size() >= 8:
 		print("[SERVER RoomManager] join_room: Room ", code, " is full")
 		return false
-	room.peers.append(peer_id)
+	if not room.peers.has(peer_id):
+		room.peers.append(peer_id)
 	peer_to_room[peer_id] = code
 	print("[SERVER RoomManager] join_room: Peer ", peer_id, " joined room ", code, " (now ", room.peers.size(), " peers)")
 	return true
+
+func reassign_peer(code: String, old_peer_id: int, new_peer_id: int) -> void:
+	if not rooms.has(code):
+		print("[SERVER RoomManager] reassign_peer: Room ", code, " not found")
+		return
+	var room = rooms[code]
+	if old_peer_id == new_peer_id:
+		print("[SERVER RoomManager] reassign_peer: old_peer_id and new_peer_id are the same (", old_peer_id, ")")
+		return
+	if not room.peers.has(old_peer_id):
+		print("[SERVER RoomManager] reassign_peer: old_peer_id ", old_peer_id, " not in room ", code)
+		return
+	# Remove old peer, add new peer
+	room.peers.erase(old_peer_id)
+	if not room.peers.has(new_peer_id):
+		room.peers.append(new_peer_id)
+	peer_to_room.erase(old_peer_id)
+	peer_to_room[new_peer_id] = code
+	print("[SERVER RoomManager] reassign_peer: Reassigned ", old_peer_id, " to ", new_peer_id, " in room ", code)
 
 func leave_room(peer_id: int) -> void:
 	print("[SERVER RoomManager] leave_room: Peer ", peer_id, " leaving")
@@ -104,9 +124,11 @@ func start_room(code: String) -> bool:
 
 func get_room_for_peer(peer_id: int) -> Room:
 	if not peer_to_room.has(peer_id):
+		print("[SERVER RoomManager] get_room_for_peer: peer_id ", peer_id, " not in peer_to_room. peer_to_room=", peer_to_room)
 		return null
 	var code = peer_to_room[peer_id]
 	if not rooms.has(code):
+		print("[SERVER RoomManager] get_room_for_peer: code ", code, " not in rooms. rooms=", rooms.keys())
 		return null
 	return rooms[code]
 

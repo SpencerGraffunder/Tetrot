@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Network="*uid://qxxkd3v7yj7j"
 RoomManager="*uid://ci52dx5b8qf8p"
+DeviceID="*res://scripts/DeviceID.gd"
 
 [display]
 
