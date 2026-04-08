@@ -43,7 +43,7 @@ func _ready():
 		else:
 			previews[i].visible = false
 
-	print("Main ready, connecting signals")
+	print_verbose("Main ready, connecting signals")
 	Network.player_disconnected.connect(_on_player_disconnected)
 
 	$Player1Area/VBoxContainer/TopButtonRow/PauseButton.button_down.connect(_on_pause_pressed)
@@ -134,13 +134,13 @@ func _on_player_disconnected(_id):
 	pass
 
 func _on_main_menu_pressed():
-	print("[CLIENT Main] _on_main_menu_pressed: Calling rpc_leave_game on server and returning to Lobby scene")
+	print_verbose("[CLIENT Main] _on_main_menu_pressed: Calling rpc_leave_game on server and returning to Lobby scene")
 	Network.rpc_leave_game.rpc_id(1)
 	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
 
 @rpc("authority", "call_local", "reliable")
 func trigger_game_over(score: int, level: int):
-	print("[CLIENT Main] trigger_game_over: score=", score, " level=", level, " - changing to GameOver scene")
+	print_verbose("[CLIENT Main] trigger_game_over: score=", score, " level=", level, " - changing to GameOver scene")
 	Network.final_score = score
 	Network.final_level = level
 	get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
